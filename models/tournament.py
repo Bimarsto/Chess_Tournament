@@ -1,16 +1,43 @@
-TIME_CONTROL=("bullet", "blitz", "coup rapide")
+from models.player import Player
+from models.round import Round
+from models.match import Match
 
 
 class Tournament:
     """Tournament"""
+    TIME_CONTROL = ("bullet", "blitz", "coup rapide")
 
-    def __init__(self, name, location, date, duration, number_of_rounds, rounds, players, time_control, description):
+    def __init__(self, name, location, start_date, end_date, time_control, description,
+                 number_of_rounds=4, max_players=8):
         self.name = name
         self.location = location
-        self.date = date
-        self.duration = duration
-        self.number_of_rounds = number_of_rounds
-        self.rounds = rounds
-        self.players = players
+        self.start_date = start_date
+        self.end_date = end_date
         self.time_control = time_control
         self.description = description
+        self.number_of_rounds = number_of_rounds
+        self.max_players = max_players
+
+        self.tournament_rounds = []
+        self.tournament_players = []
+
+    def add_player(self, player_index):
+        if len(self.tournament_players) < self.max_players:
+            player = Player.all_players[player_index]
+            self.tournament_players.append(player)
+        else:
+            print('Le nombre de joueurs max pour ce tournoi a été atteint. '
+                  'Vous ne pouvez plus ajouter de nouveau joueurs. ')
+        return self.tournament_players
+
+    def create_rounds(self):
+        self.tournament_rounds.append(Round(f"Round {len(self.tournament_rounds)+1}",
+                                            len(self.tournament_rounds)+1,
+                                            self.tournament_players
+                                            )
+                                      )
+        return self.tournament_rounds
+
+    def get_tournament_ranking(self, by_score=True):
+        return sorted(self.tournament_players, key=lambda x: (x.tournament_score, x.rank), reverse=True)
+
