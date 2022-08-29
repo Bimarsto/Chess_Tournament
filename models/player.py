@@ -14,7 +14,7 @@ class Player:
         self.rank = rank
         self.tournament_score = 0
 
-        all_players.append(self)
+        self.all_players.append(self)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} " \

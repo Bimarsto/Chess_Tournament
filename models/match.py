@@ -1,5 +1,5 @@
 from models.player import Player
-from models.tournament import Tournament
+# from models.tournament import Tournament
 
 class Match:
     """Match"""

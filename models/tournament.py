@@ -2,10 +2,10 @@ from models.player import Player
 from models.round import Round
 from models.match import Match
 
+all_tournaments = []
 
 class Tournament:
     """Tournament"""
-    TIME_CONTROL = ("bullet", "blitz", "coup rapide")
 
     def __init__(self, name, location, start_date, end_date, time_control, description,
                  number_of_rounds=4, max_players=8):
@@ -20,6 +20,11 @@ class Tournament:
 
         self.tournament_rounds = []
         self.tournament_players = []
+
+        all_tournaments.append(self)
+
+    def __str__(self):
+        return f"Tournoi {self.name} du {self.start_date} au {self.end_date} à {self.location}"
 
     def add_player(self, player_index):
         if len(self.tournament_players) < self.max_players:
