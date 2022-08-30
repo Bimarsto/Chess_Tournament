@@ -1,71 +1,51 @@
-"""View for tounament"""
-from views.error import Error
+"""View for tournament"""
+from views.messages import Error
+
 
 class TournamentView:
     """Tournament view"""
 
     def __init__(self):
-        self.name = self._get_tournament_name(),
-        self.location = self._get_tournament_location(),
-        self.start_date = self._get_tournament_start_date(),
-        self.end_date = self._get_tournament_end_date(),
-        self.time_control = self._get_tournament_time_control(),
-        self.description = self._get_tournament_description(),
-        self.number_of_rounds = self._get_tournament_number_of_rounds(),
+        self.name = self._get_information('Quel est le nom du tournoi?',
+                                          'Champs obligatoire! Merci de le renseigner.')
+        self.location = self._get_information('Indiquez le lieu ou se déroule le tournoi?',
+                                              'Champs obligatoire! Merci de le renseigner.')
+        self.start_date = self._get_information('Quel est la date de début du tournoi?',
+                                                'Champs obligatoire! Merci de le renseigner.')
+        self.end_date = self._get_information('Quel est la date de fin du tournoi?',
+                                              'Champs obligatoire! Merci de le renseigner.')
+        self.time_control = self._get_tournament_time_control()
+        self.description = self._get_information('Ajoutez une decsription du tournoi',
+                                                 'Champs obligatoire! Merci de le renseigner.')
+        self.number_of_rounds = self._get_tournament_number_of_rounds()
         self.max_players = self._get_tournament_max_players()
 
-
-# ---------------------- A Factoriser -----------------
     @staticmethod
-    def _get_tournament_name():
-        tournament_name = ""
+    def _get_information(message, error_message):
+        answer = ''
         count = 0
-        while tournament_name == "":
+        while answer == '':
             if count >= 1:
-                Error("Champs obligatoire! Merci de le renseigner.").__call__()
-            tournament_name = input("Quel est le nom du tournoi? \n")
+                Error(error_message)
+            answer = input(message + '\n')
             count += 1
-        return tournament_name
-
-    @staticmethod
-    def _get_tournament_location():
-        tournament_location = ""
-        count = 0
-        tournament_location = input("Indiquez le lieu ou se déroule le tournoi? \n")
-        if not tournament_location:
-            return None
-        return tournament_location
-
-    @staticmethod
-    def _get_tournament_start_date():
-        tournament_start_date = input("Quel est la date de début du tournoi? \n")
-        if not tournament_start_date:
-            return None
-        return tournament_start_date
-
-    @staticmethod
-    def _get_tournament_end_date():
-        tournament_end_date = input("Quel est la date de fin du tournoi? \n")
-        if not tournament_end_date:
-            return None
-        return tournament_end_date
+        return answer
 
     @staticmethod
     def _get_tournament_time_control():
-        tournament_time_control = input("Sélectionnez le contrôle de temps du tournoi: \n"
+        tournament_time_control = ""
+        count = 0
+        while tournament_time_control == "":
+            if count >= 1:
+                Error("Champs obligatoire! Merci de le renseigner.").__call__()
+            tournament_time_control = input("Sélectionnez le contrôle de temps du tournoi: \n"
                                         "1 : Bullet \n"
                                         "2 : Blitz \n"
                                         "3 : Coup rapide \n")
-        if not tournament_time_control:
-            return None
+            count += 1
+            if tournament_time_control not in ["1", "2", "3"]:
+                tournament_time_control = ""
         return tournament_time_control
-
-    @staticmethod
-    def _get_tournament_description():
-        tournament_description = input("Ajoutez une decsription du tournoi? \n")
-        if not tournament_description:
-            return None
-        return tournament_description
 
     @staticmethod
     def _get_tournament_number_of_rounds():
@@ -80,5 +60,3 @@ class TournamentView:
         if not tournament_max_players:
             return 8
         return tournament_max_players
-
-# --------------------------------------------------------------

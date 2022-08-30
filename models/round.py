@@ -24,7 +24,6 @@ class Round:
         lower_half_group = sorted_players[int(len(self.players) / 2):]
         for i in range(0, len(upper_half_group)):
             self.matchs.append(Match(upper_half_group[i], lower_half_group[i]))
-            print(Match(upper_half_group[i], lower_half_group[i]))
 
     def create_player_pairs(self):
         pass

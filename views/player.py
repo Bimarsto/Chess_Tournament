@@ -1,42 +1,57 @@
 """Base view for player."""
+import dateparser
+from datetime import time
+from views.messages import Error
 
 
 class PlayerView:
     """Player view."""
 
-    def get_player_last_name(self):
-        last_name = input("Quel est le nom de famille du joueur ? \n")
-        if not last_name:
-            return None
-        return last_name
+    def __init__(self):
+        self.last_name = self._get_information('Quel est le nom de famille du joueur?',
+                                               'Champs obligatoire! Merci de le renseigner.')
+        self.first_name = self._get_information('Quel est le prénom du joueur?',
+                                                'Champs obligatoire! Merci de le renseigner.')
+        self.birth_date = self._get_player_birth_date()
+        self.sex = self._get_player_sex()
+        self.rank = self._get_rank()
 
-    def get_player_first_name(self):
-        first_name = input("Quel est le prénom du joueur ? \n")
-        if not first_name:
-            return None
-        return first_name
+    @staticmethod
+    def _get_information(message, error_message):
+        answer = ''
+        count = 0
+        while answer == '':
+            if count >= 1:
+                Error(error_message)
+            answer = input(message + '\n')
+            count += 1
+        return answer
 
-    def get_player_birth_date(self):
-        birth_date = input("Quel est la date de naissance du joueur ? \n")
-        if not birth_date:
-            return None
-        return birth_date
+    def _get_player_birth_date(self):
+        birth_date = self._get_information("Quel est la date d'anniversaire du joueur?",
+                                           "Champs obligatoire! Merci de le renseigner.")
+        parsed_birth_date = dateparser.parse(birth_date).strftime("%d/%m/%Y")
+        print(parsed_birth_date)
+        return parsed_birth_date
 
-    def get_player_sex(self):
-        sex = input("Sélectionnez le sexe du joueur: \n"
-                    "1 : Homme \n"
-                    "2 : Femme \n")
-        if not sex:
-            return None
-        return sex
+    @staticmethod
+    def _get_player_sex():
+        sex = ""
+        count = 0
+        while sex == "":
+            if count >= 1:
+                Error("Champs obligatoire! Merci de le renseigner.")
+            sex = input("Sélectionnez le sexe du joueur: \n"
+                        "1 : Homme \n"
+                        "2 : Femme \n")
+            count += 1
+            if sex not in ["1", "2"]:
+                sex = ""
+            return sex
 
-    def get_player_rank(self):
-        is_ranked = input("Le joueur est-il classé ? (Y/N) \n")
-        if is_ranked in ["Y", "y"]:
-            rank = input("Quel est le classement du joueur ? \n")
-        else:
-            return None
-
+    @staticmethod
+    def _get_rank():
+        rank = input("Quel est le classement du joueur? (0 par défaut) \n")
         if not rank:
-            return None
+            return 0
         return rank
