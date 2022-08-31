@@ -5,6 +5,7 @@ from views.messages import Error, Information
 
 console = Console(width=75)
 
+
 class MainMenu:
     """Menus view."""
 
@@ -30,8 +31,7 @@ class TournamentMenu:
     def __init__(self, tournament):
         self.tournament = tournament
 
-
-    def tournament_menu(self):
+    def tournament_creation_menu(self):
         choice = ""
         count = 0
         while choice == "":
@@ -47,3 +47,21 @@ class TournamentMenu:
             if choice not in ["0", "1", "2"]:
                 choice = ""
         return choice
+
+
+class RoundMenu:
+    def __init__(self, round):
+        self.round = round
+
+    def round_menu(self):
+        choice = ""
+        count = 0
+        while choice == "":
+            if count >= 1:
+                Error("Veuillez entrer le n° de votre choix dans le menu.")
+            Information(f"Menu du {self.round.name}")
+            choice = input(f"Mettre à jour le match n° : \n")
+            count += 1
+            if int(choice) in range(1, len(self.round)):
+                return choice
+            choice = ""

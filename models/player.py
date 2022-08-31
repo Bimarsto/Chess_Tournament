@@ -2,7 +2,6 @@
 
 class Player:
     """Player."""
-    all_players = []
 
     def __init__(self, last_name, first_name, birth_date, sex, rank=0):
         """Has a last name, a first name, a date of birth,
@@ -14,8 +13,5 @@ class Player:
         self.rank = rank
         self.tournament_score = 0
 
-        self.all_players.append(self)
-
     def __str__(self):
-        return f"{self.first_name} {self.last_name} " \
-               f"né(e) le {self.birth_date} est classé(e) {self.rank}"
+        return f"{self.first_name} {self.last_name}"
