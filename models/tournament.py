@@ -1,13 +1,13 @@
 from models.round import Round
-from models.match import Match
 
 all_tournaments = []
 
-class Tournament:
+
+class TournamentModel:
     """Tournament"""
 
     def __init__(self, name, location, start_date, end_date, time_control, description,
-                 number_of_rounds=4, max_players=8):
+                 number_of_rounds=4, number_of_players=8):
         self.name = name
         self.location = location
         self.start_date = start_date
@@ -15,7 +15,7 @@ class Tournament:
         self.time_control = time_control
         self.description = description
         self.number_of_rounds = number_of_rounds
-        self.max_players = max_players
+        self.number_of_players = number_of_players
 
         self.tournament_rounds = []
         self.tournament_players = []
@@ -34,7 +34,6 @@ class Tournament:
                                             self.tournament_players
                                             )
                                       )
-        return self.tournament_rounds
 
     def get_tournament_ranking(self, by_score=True):
         return sorted(self.tournament_players, key=lambda x: (x.tournament_score, x.rank), reverse=True)

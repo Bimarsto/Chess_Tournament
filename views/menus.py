@@ -1,51 +1,26 @@
 """Base view."""
 from rich.console import Console
-
 from views.messages import Error, Information
-
-console = Console(width=75)
 
 
 class MainMenu:
     """Menus view."""
 
     @staticmethod
-    def main_menu():
-        choice = ""
-        count = 0
-        while choice == "":
-            console.rule("Gestionnaire de tournoi d'echec | Bienvenue")
-            if count >=1:
-                Error("Veuillez entrer le n° de votre choix dans le menu.")
-            Information("Menu Principal")
-            choice = input("Entrez votre choix : \n"
-                           "0 Quitter \n"
-                           "1 Creer un nouveau tournoi \n")
-            count +=1
-            if choice not in ["0", "1"]:
-                choice = ""
-        return choice
-
-
-class TournamentMenu:
-    def __init__(self, tournament):
-        self.tournament = tournament
-
-    def tournament_creation_menu(self):
-        choice = ""
-        count = 0
-        while choice == "":
-            if count >= 1:
-                Error("Veuillez entrer le n° de votre choix dans le menu.")
-            Information(f"Menu du tournoi {self.tournament.name} - {len(self.tournament.tournament_players)}/"
-                        f"{self.tournament.max_players} joueur(s) inscrit(s)")
-            choice = input("Entrez votre choix : \n"
-                           "0 Retour au menu principal \n"
-                           "1 Ajouter un joueur \n"
-                           "2 Démarrer le tournoi \n")
-            count += 1
-            if choice not in ["0", "1", "2"]:
-                choice = ""
+    def get_choice():
+        Information('Menu Principal')
+        choice = ''
+        while choice == '':
+            choice = input('Entrez votre choix : \n'
+                           '0 : Quitter \n'
+                           '1 : Creer un nouveau tournoi \n'
+                           '2 : Accéder à un tournoi \n'
+                           '3 : Ajouter un nouveau joueur \n'
+                           '4 : Modifier un joueur \n'
+                           '5 : Rapports \n')
+            if choice not in ['0', '1', '2', '3', '4', '5']:
+                Error('Veuillez entrer le n° de votre choix dans le menu.')
+                choice = ''
         return choice
 
 
@@ -62,6 +37,6 @@ class RoundMenu:
             Information(f"Menu du {self.round.name}")
             choice = input(f"Mettre à jour le match n° : \n")
             count += 1
-            if int(choice) in range(1, len(self.round)):
-                return choice
+            if int(choice)-1 in range(0, len(self.round.matchs)):
+                return int(choice)-1
             choice = ""

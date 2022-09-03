@@ -1,6 +1,7 @@
-# from data_storage import save_players
+all_players = []
 
-class Player:
+
+class PlayerModel:
     """Player."""
 
     def __init__(self, last_name, first_name, birth_date, sex, rank=0):
@@ -11,7 +12,11 @@ class Player:
         self.birth_date = birth_date
         self.sex = sex
         self.rank = rank
-        self.tournament_score = 0
 
-    def __str__(self):
+        self.tournament_score = 0
+        self.played_against = []
+
+        all_players.append(self)
+
+    def __repr__(self):
         return f"{self.first_name} {self.last_name}"
