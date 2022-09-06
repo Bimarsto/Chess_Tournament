@@ -48,5 +48,5 @@ class Round:
                     i += 1
                     j = 0
             else:
-                Error('Génération des match impossible')
+                Error('Génération des matchs impossible')
 

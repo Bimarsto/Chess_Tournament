@@ -13,16 +13,17 @@ class PlayerView:
                                               'Champs obligatoire! Merci de le renseigner.')
         self.first_name = self.get_information('Quel est le prénom du joueur?',
                                                'Champs obligatoire! Merci de le renseigner.')
-        self.birth_date = self.get_player_birth_date()
+        self.birth_date = self.get_player_birth_date("Quel est la date d'anniversaire du joueur?",
+                                                     'Champs obligatoire! Merci de le renseigner.')
         self.sex = self.get_player_sex()
         self.rank = self.get_rank('Quel est le classement du joueur? (0 par défaut)')
 
-    def get_player_birth_date(self):
-        birth_date = self.get_information("Quel est la date d'anniversaire du joueur?",
-                                          "Champs obligatoire! Merci de le renseigner.")
+    @staticmethod
+    def get_player_birth_date(message, error_message):
+        birth_date = PlayerView.get_information(message, error_message)
         parsed_birth_date = Utils.parse_date(birth_date)
         if parsed_birth_date is None:
-            self.get_player_birth_date()
+            PlayerView.get_player_birth_date(message, error_message)
         else:
             return parsed_birth_date
 
@@ -86,21 +87,22 @@ class PlayerMenu:
             match field[0]:
                 case '1':
                     field[0] = 'last_name'
-                    field[1] = PlayerView().get_information('Quel est le nom de famille du joueur?',
-                                                            'Champs obligatoire! Merci de le renseigner.')
+                    field[1] = PlayerView.get_information('Quel est le nom de famille du joueur?',
+                                                          'Champs obligatoire! Merci de le renseigner.')
                 case '2':
                     field[0] = 'first_name'
-                    field[1] = PlayerView().get_information('Quel est le prénom du joueur?',
-                                                            'Champs obligatoire! Merci de le renseigner.')
+                    field[1] = PlayerView.get_information('Quel est le prénom du joueur?',
+                                                          'Champs obligatoire! Merci de le renseigner.')
                 case '3':
                     field[0] = 'birth_date'
-                    field[1] = PlayerView().get_player_birth_date()
+                    field[1] = PlayerView.get_player_birth_date("Quel est la date d'anniversaire du joueur?",
+                                                                'Champs obligatoire! Merci de le renseigner.')
                 case '4':
                     field[0] = 'sex'
-                    field[1] = PlayerView().get_player_sex()
+                    field[1] = PlayerView.get_player_sex()
                 case '5':
                     field[0] = 'rank'
-                    field[1] = PlayerView().get_rank('Quel est le classement du joueur? (0 par défaut)')
+                    field[1] = PlayerView.get_rank('Quel est le classement du joueur? (0 par défaut)')
                 case _:
                     Error('Merci de sélectioner une information à modifier dans la liste.')
             return field
@@ -110,7 +112,7 @@ class PlayerMenu:
         selection = ''
         valid_value = False
         while not valid_value:
-            selection = input("Entrez l'id du joueur désiré: (liste des joueurs ci-dessus)")
+            selection = input("Entrez l'id du joueur désiré: (liste des joueurs ci-dessus) \n")
             if selection == '':
                 Error('Champs obligatoire! Merci de le renseigner.')
             if not str(selection).isdigit():

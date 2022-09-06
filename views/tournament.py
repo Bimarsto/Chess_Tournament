@@ -8,26 +8,29 @@ from controllers.utils import Utils
 class TournamentView:
     """Tournament view"""
 
-    def __init__(self):
-        self.name = self.get_information('Quel est le nom du tournoi?',
-                                         'Champs obligatoire! Merci de le renseigner.')
-        self.location = self.get_information('Indiquez le lieu ou se déroule le tournoi?',
-                                             'Champs obligatoire! Merci de le renseigner.')
-        self.start_date = self.get_tournament_date('Quel est la date de début du tournoi?',
-                                                   'Champs obligatoire! Merci de le renseigner.')
-        self.end_date = self.get_tournament_date('Quel est la date de fin du tournoi?',
-                                                 'Champs obligatoire! Merci de le renseigner.')
-        self.time_control = self.get_tournament_time_control()
-        self.description = self.get_information('Ajoutez une decsription du tournoi',
-                                                'Champs obligatoire! Merci de le renseigner.')
-        self.number_of_rounds = self.get_value("Quel est le nombre de rounds pour ce tournoi? (4 par défaut)", 1, 4)
-        self.number_of_players = self.get_value("Quel est le nombre de joueurs pour ce tournoi? (8 par défaut)", 2, 8)
+    def creation(self):
+        return {'name': self.get_information('Quel est le nom du tournoi?',
+                                             'Champs obligatoire! Merci de le renseigner.'),
+                'location': self.get_information('Indiquez le lieu ou se déroule le tournoi?',
+                                                 'Champs obligatoire! Merci de le renseigner.'),
+                'start_date': self.get_tournament_date('Quel est la date de début du tournoi?',
+                                                       'Champs obligatoire! Merci de le renseigner.'),
+                'end_date': self.get_tournament_date('Quel est la date de fin du tournoi?',
+                                                     'Champs obligatoire! Merci de le renseigner.'),
+                'time_control': self.get_tournament_time_control(),
+                'description': self.get_information('Ajoutez une decsription du tournoi',
+                                                    'Champs obligatoire! Merci de le renseigner.'),
+                'number_of_rounds': self.get_value("Quel est le nombre de rounds pour ce tournoi? (4 par défaut)",
+                                                   1, 4),
+                'number_of_players': self.get_value("Quel est le nombre de joueurs pour ce tournoi? (8 par défaut)",
+                                                    2, 8)
+                }
 
     def get_tournament_date(self, message, error_message):
         date = self.get_information(message, error_message)
         parsed_date = Utils.parse_date(date)
         if parsed_date is None:
-            self.get_tournament_date(message,error_message)
+            self.get_tournament_date(message, error_message)
         else:
             return parsed_date
 
@@ -92,10 +95,10 @@ class TournamentMenu:
                     f"{self.tournament.number_of_players} joueur(s) inscrit(s)")
         while choice == '':
             choice = input('Entrez votre choix : \n'
-                           '0 : Retour au menu principal \n'
                            '1 : Ajouter un joueur \n'
-                           '2 : Démarrer le prochain round \n')
-            if choice not in ['0', '1', '2']:
+                           '2 : Démarrer le prochain round \n'
+                           '9 : Retour au menu principal \n')
+            if choice not in ['9', '1', '2']:
                 Error('Veuillez entrer le n° de votre choix dans le menu.')
                 choice = ''
         return choice
@@ -105,15 +108,13 @@ class TournamentMenu:
         choice = ''
         while choice == '':
             choice = input('Entrez votre choix : \n'
-                           '0 : Retour au menu du tournoi \n'
                            '1 : Joueur existant \n'
-                           '2 : Nouveau joueur \n')
-            if choice not in ['0', '1', '2']:
+                           '2 : Nouveau joueur \n'
+                           '9 : Retour au menu du tournoi \n')
+            if choice not in ['9', '1', '2']:
                 Error('Veuillez entrer le n° de votre choix dans le menu.')
                 choice = ''
         return choice
-
-
 
     @staticmethod
     def modification_display():
@@ -177,6 +178,7 @@ class TournamentMenu:
                 valid_value = True
         return all_tournaments[int(selection)]
 
+
 class TournamentDisplay:
 
     @staticmethod
@@ -200,7 +202,7 @@ class TournamentDisplay:
                                      f"{tournament.end_date}",
                                      f"{tournament.time_control}",
                                      f"{tournament.number_of_rounds}",
-                                     f"{tournament.max_players}",
+                                     f"{tournament.number_of_players}",
                                      f"{tournament.description}"
                                      )
         console.print(tournament_table)

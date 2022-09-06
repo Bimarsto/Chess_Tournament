@@ -1,13 +1,12 @@
 from models.round import Round
 
-all_tournaments = []
-
 
 class TournamentModel:
     """Tournament"""
+    all_tournaments = []
 
     def __init__(self, name, location, start_date, end_date, time_control, description,
-                 number_of_rounds=4, number_of_players=8):
+                 number_of_rounds=4, number_of_players=8, tournament_rounds=[], tournament_players=[]):
         self.name = name
         self.location = location
         self.start_date = start_date
@@ -17,10 +16,10 @@ class TournamentModel:
         self.number_of_rounds = number_of_rounds
         self.number_of_players = number_of_players
 
-        self.tournament_rounds = []
-        self.tournament_players = []
+        self.tournament_rounds = tournament_rounds
+        self.tournament_players = tournament_players
 
-        all_tournaments.append(self)
+        self.all_tournaments.append(self)
 
     def __str__(self):
         return f"le tournoi {self.name} (du {self.start_date} au {self.end_date} à {self.location}) \n"

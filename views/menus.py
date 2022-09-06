@@ -5,23 +5,24 @@ from views.messages import Error, Information
 
 class MainMenu:
     """Menus view."""
+    def __init__(self):
+        self.choice = ''
 
-    @staticmethod
-    def get_choice():
+    def get_choice(self):
         Information('Menu Principal')
-        choice = ''
-        while choice == '':
-            choice = input('Entrez votre choix : \n'
-                           '0 : Quitter \n'
-                           '1 : Creer un nouveau tournoi \n'
-                           '2 : Accéder à un tournoi \n'
-                           '3 : Ajouter un nouveau joueur \n'
-                           '4 : Modifier un joueur \n'
-                           '5 : Rapports \n')
-            if choice not in ['0', '1', '2', '3', '4', '5']:
+        self.choice = ''
+        while self.choice == '':
+            self.choice = input('Entrez votre choix : \n'
+                                '1 : Creer un nouveau tournoi \n'
+                                '2 : Accéder à un tournoi \n'
+                                '3 : Ajouter un nouveau joueur \n'
+                                '4 : Modifier un joueur \n'
+                                '5 : Rapports \n'
+                                '9 : Quitter \n')
+            if self.choice not in ['9', '1', '2', '3', '4', '5']:
                 Error('Veuillez entrer le n° de votre choix dans le menu.')
-                choice = ''
-        return choice
+                self.choice = ''
+        return self.choice
 
 
 class RoundMenu:
