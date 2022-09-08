@@ -181,21 +181,22 @@ class TournamentMenu:
 
 class TournamentDisplay:
 
-    @staticmethod
-    def display_tournament_list(tournament_list):
-        console = Console()
-        tournament_table = Table(title="Liste de l'ensemble des tournois", title_style='bold blue')
-        tournament_table.add_column('ID')
-        tournament_table.add_column('Nom')
-        tournament_table.add_column('Lieu')
-        tournament_table.add_column('Date de début')
-        tournament_table.add_column('Date de fin')
-        tournament_table.add_column('Contrôl de temps')
-        tournament_table.add_column('Nombre de rounds')
-        tournament_table.add_column('Nombre de joueurs')
-        tournament_table.add_column('Description')
-        for tournament in tournament_list:
-            tournament_table.add_row(f"{tournament_list.index(tournament)}",
+    def __init__(self):
+        self.console = Console(width=200)
+
+    def display_tournaments_list(self, tournaments_list):
+        tournament_table = Table(title="Liste des tournois", title_style='bold blue')
+        tournament_table.add_column('ID', justify='center')
+        tournament_table.add_column('Nom', justify='center')
+        tournament_table.add_column('Lieu', justify='center')
+        tournament_table.add_column('Date de début', justify='center')
+        tournament_table.add_column('Date de fin', justify='center')
+        tournament_table.add_column('Contrôl de temps', justify='center')
+        tournament_table.add_column('Nombre de rounds', justify='center')
+        tournament_table.add_column('Nombre de joueurs', justify='center')
+        tournament_table.add_column('Description', justify='center')
+        for tournament in tournaments_list:
+            tournament_table.add_row(f"{tournaments_list.index(tournament)}",
                                      f"{tournament.name}",
                                      f"{tournament.location}",
                                      f"{tournament.start_date}",
@@ -205,4 +206,4 @@ class TournamentDisplay:
                                      f"{tournament.number_of_players}",
                                      f"{tournament.description}"
                                      )
-        console.print(tournament_table)
+        self.console.print(tournament_table)

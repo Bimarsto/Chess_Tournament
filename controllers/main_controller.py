@@ -1,19 +1,13 @@
-from datetime import datetime
-from views.menus import MainMenu, RoundMenu
 from views.tournament import TournamentView, TournamentMenu, TournamentDisplay
-from views.round import RoundView
-from views.match import MatchView
-from views.player import PlayerView, PlayerMenu, PlayerDisplay
+from views.round import RoundView, RoundDisplay
+from views.match import MatchDisplay
+from views.player import PlayerMenu, PlayerDisplay
 from views.messages import Error, Information
-from views.menus import MainMenu
+from views.menus import MainMenu, ReportMenu
 from controllers.tournament import TournamentController
-from controllers.round import RoundController
 from controllers.match import MatchController
 from controllers.player import PlayerController
 from controllers.utils import Utils
-from models.tournament import TournamentModel
-from models.round import Round
-from models.match import MatchModel
 from models.player import PlayerModel
 from rich.console import Console
 
@@ -27,9 +21,14 @@ class MainController:
         self.tournament = TournamentController()
         self.player = PlayerController()
         self.player_model = PlayerModel
+        self.report = ReportMenu()
+        self.player_display = PlayerDisplay()
+        self.tournament_display = TournamentDisplay()
+        self.match_display = MatchDisplay()
+        self.round_display = RoundDisplay()
 
     def run(self):
-        console = Console(width=100)
+        console = Console(width=200)
         console.rule("Gestionnaire de tournoi d'echec | Bienvenue")
         while self.running:
             self.main_menu_controller()
@@ -37,6 +36,7 @@ class MainController:
 
     def main_menu_controller(self):
         self.player.load_all_players()
+        self.tournament.load_all_tournaments()
         # self.tournament.load_tournaments()
         match self.mainmenu.get_choice():
             case '9':  # Quitter
@@ -48,7 +48,7 @@ class MainController:
                 self.tournament_controller(new_tournament)
             case '2':  # Accéder à un tournoi
                 if len(self.tournament.model.all_tournaments) > 0:
-                    TournamentDisplay().display_tournament_list(self.tournament.model.all_tournaments)
+                    TournamentDisplay().display_tournaments_list(self.tournament.model.all_tournaments)
                     selected_tournament = TournamentMenu.select_tournament(self.tournament.model.all_tournaments)
                     self.tournament_controller(selected_tournament)
                 else:
@@ -58,7 +58,7 @@ class MainController:
             case '4':  # Modifier un joueur
                 self.player.modify_player()
             case '5':  # Rapports
-                pass
+                self.reports_controller(self.report.get_report_type())
 
     def tournament_controller(self, tournament):
         match TournamentMenu(tournament).tournament_creation_menu():
@@ -75,7 +75,7 @@ class MainController:
                 if active_round is None:
                     self.tournament_controller(tournament)
                 else:
-                    self.play_round(tournament,active_round)
+                    self.play_round(tournament, active_round)
 
     def add_tournament_player(self, tournament):
         match TournamentMenu(tournament).add_player():
@@ -87,7 +87,7 @@ class MainController:
                     if player not in tournament.tournament_players:
                         available_players.append(player)
                 if len(available_players) > 0:
-                    PlayerDisplay.display_players_list(available_players)
+                    self.player_display.display_players_list(available_players)
                     player = PlayerMenu().select_player(available_players)
                     self.tournament.add_player(tournament, player)
                     self.tournament_controller(tournament)
@@ -99,10 +99,81 @@ class MainController:
                 self.tournament.add_player(tournament, player)
                 self.tournament_controller(tournament)
 
+    def reports_controller(self, report):
+        match report:
+            case '9':
+                self.main_menu_controller()
+            case '1':
+                if len(self.player_model.all_players) > 0:
+                    self.player_display.report(self.player_model.all_players, 'ordre alphabétique')
+                    input('Appuyer sur "Entrée" pour revenir au menu')
+                    self.reports_controller(self.report.get_report_type())
+                else:
+                    Error("Aucun joueur accessible.")
+            case '2':
+                if len(self.player_model.all_players) > 0:
+                    self.player_display.report(self.player_model.all_players, 'classement')
+                    input('Appuyer sur "Entrée" pour revenir au menu')
+                    self.reports_controller(self.report.get_report_type())
+                else:
+                    Error("Aucun joueur accessible.")
+            case '3':
+                if len(self.tournament.model.all_tournaments) > 0:
+                    self.tournament_display.display_tournaments_list(self.tournament.model.all_tournaments)
+                    input('Appuyer sur "Entrée" pour revenir au menu')
+                    self.reports_controller(self.report.get_report_type())
+                else:
+                    Error("Aucun tournoi accessible.")
+            case '4':
+                if len(self.tournament.model.all_tournaments) > 0:
+                    self.tournament_display.display_tournaments_list(self.tournament.model.all_tournaments)
+                    tournament = self.tournament.menu.select_tournament(self.tournament.model.all_tournaments)
+                    if len(tournament.tournament_players) > 0:
+                        self.player_display.report(tournament.tournament_players, 'ordre alphabétique')
+                        input('Appuyer sur "Entrée" pour revenir au menu')
+                    else:
+                        Error("Aucun joueur inscrit pour ce tournoi.")
+                    self.reports_controller(self.report.get_report_type())
+                else:
+                    Error("Aucun tournoi accessible.")
+            case '5':
+                if len(self.tournament.model.all_tournaments) > 0:
+                    self.tournament_display.display_tournaments_list(self.tournament.model.all_tournaments)
+                    tournament = self.tournament.menu.select_tournament(self.tournament.model.all_tournaments)
+                    if len(tournament.tournament_players) > 0:
+                        self.player_display.report(tournament.tournament_players, 'classement')
+                        input('Appuyer sur "Entrée" pour revenir au menu')
+                    else:
+                        Error("Aucun joueur inscrit pour ce tournoi.")
+                    self.reports_controller(self.report.get_report_type())
+                else:
+                    Error("Aucun tournoi accessible.")
+            case '6':
+                if len(self.tournament.model.all_tournaments) > 0:
+                    self.tournament_display.display_tournaments_list(self.tournament.model.all_tournaments)
+                    tournament = self.tournament.menu.select_tournament(self.tournament.model.all_tournaments)
+                    if len(tournament.tournament_rounds) > 0:
+                        self.round_display.display_rounds_list(tournament)
+                    else:
+                        Error("Aucun round n'est créé pour ce tournoi.")
+                else:
+                    Error("Aucun tournoi accessible.")
+            case '7':
+                if len(self.tournament.model.all_tournaments) > 0:
+                    self.tournament_display.display_tournaments_list(self.tournament.model.all_tournaments)
+                    tournament = self.tournament.menu.select_tournament(self.tournament.model.all_tournaments)
+                    if len(tournament.tournament_rounds) > 0:
+                        pass
+                    else:
+                        Error("Aucun round n'est créé pour ce tournoi.")
+                else:
+                    Error("Aucun tournoi accessible.")
+
     def play_round(self, tournament, active_round):
         round_uncompleted = True
         while round_uncompleted:
-            RoundView(active_round).display_round_matchs()
+            self.match_display.display_matchs_list(active_round, active_round.matchs)
+            # RoundView(active_round).display_round_matchs()
             match_index = RoundView(active_round).round_menu()
             if int(match_index) == 0:
                 self.tournament_controller(tournament)

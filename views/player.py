@@ -126,9 +126,11 @@ class PlayerMenu:
 
 class PlayerDisplay:
 
-    @staticmethod
-    def display_players_list(player_list):
-        console = Console()
+    def __init__(self):
+        self.console = Console(width=200)
+
+    def display_players_list(self, player_list):
+        console = self.console
         player_table = Table(title="Liste de l'ensemble des joueurs", title_style='bold blue')
         player_table.add_column('ID')
         player_table.add_column('Nom')
@@ -145,3 +147,28 @@ class PlayerDisplay:
                                  f"{player.rank}"
                                  )
         console.print(player_table)
+
+    def report(self, player_list, sort_type):
+        console = self.console
+        if sort_type == 'classement':
+            sorted_player_list = sorted(player_list, key=lambda players: players.rank, reverse=True)
+        else:
+            sorted_player_list = sorted(player_list, key=lambda players: (players.last_name, players.first_name))
+        player_table = Table(title=f"Liste de tous les joueurs | par {sort_type}", title_style='bold blue')
+        player_table.add_column('', justify='center')
+        player_table.add_column('Nom', justify='center')
+        player_table.add_column('Prénom', justify='center')
+        player_table.add_column('Date de naissance', justify='center')
+        player_table.add_column('Sexe', justify='center')
+        player_table.add_column('Classement', justify='center')
+        for player in sorted_player_list:
+            player_table.add_row(f"{sorted_player_list.index(player)}",
+                                 f"{player.last_name}",
+                                 f"{player.first_name}",
+                                 f"{player.birth_date}",
+                                 f"{player.sex}",
+                                 f"{player.rank}"
+                                 )
+        console.print(player_table)
+
+

@@ -43,4 +43,6 @@ class PlayerController:
         serialized_players = self.players_table.all()
         self.model.all_players = []
         for player in serialized_players:
+            id = player.pop('id')
             self.model.deserialize(player)
+            self.model.all_players[-1].id = id

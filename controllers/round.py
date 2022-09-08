@@ -1,4 +1,4 @@
-from models.round import Round
+from models.round import RoundModel
 from views.round import RoundView
 from views.messages import Information
 from controllers.match import MatchController

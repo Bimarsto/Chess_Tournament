@@ -2,6 +2,7 @@
 from rich.console import Console
 from rich.table import Table
 from views.messages import Error, Information
+from views.match import MatchDisplay
 
 
 class RoundView:
@@ -9,17 +10,6 @@ class RoundView:
     def __init__(self, active_round):
         self.round = active_round
 
-    def display_round_matchs(self):
-        console = Console()
-        match_list = Table(title='Liste des matchs du round', title_style='bold blue')
-        match_list.add_column("N°")
-        match_list.add_column("Matchs")
-        match_list.add_column("Scores")
-        for match in self.round.matchs:
-            match_list.add_row(f"{self.round.matchs.index(match)+1}",
-                               f"{match.player1} contre {match.player2}",
-                               f"{match.player1_score} - {match.player2_score}")
-        console.print(match_list)
 
     def round_menu(self):
         match_index = ''
@@ -38,3 +28,18 @@ class RoundView:
         return match_index
 
 
+class RoundDisplay:
+
+    def __init__(self):
+        self.console = Console(width=200)
+        self.match_display = MatchDisplay()
+
+    def display_rounds_list(self, tournament):
+        round_table = Table(title=f"Liste des rounds du {str(tournament)}", title_style='bold blue')
+        round_table.add_column('Nom', justify='center')
+        round_table.add_column('Matchs', justify='center')
+        for round in tournament.tournament_rounds:
+            round_table.add_row(f"{round.name}",
+                                f"{self.match_display.display_matchs_list(round, round.match)}"
+                                )
+        self.console.print(round_table)

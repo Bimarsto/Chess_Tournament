@@ -1,3 +1,5 @@
+from rich.console import Console
+from rich.table import Table
 from views.messages import Error, Information
 
 
@@ -19,3 +21,23 @@ class MatchView:
                 Error('Champs obligatoire! Merci de le renseigner.')
                 match_result = ''
         return match_result
+
+
+class MatchDisplay:
+
+    def __init__(self):
+        self.console = Console(width=200)
+
+    def display_matchs_list(self, list_origin, matchs_list):
+        if len(list_origin) >= 6 and list_origin.name[:6] == 'Round ':
+            match_table = Table(title='', title_style='bold blue')
+        else:
+            match_table = Table(title=f"Liste des matchs du {str(list_origin)}", title_style='bold blue')
+        match_table.add_column('N°', justify='center')
+        match_table.add_column('Matchs', justify='center')
+        match_table.add_column('Scores', justify='center')
+        for match in matchs_list:
+            match_table.add_row(f"{matchs_list.index(match)+1}",
+                                f"{match.player1} contre {match.player2}",
+                                f"{match.player1_score} - {match.player2_score}")
+        self.console.print(match_table)

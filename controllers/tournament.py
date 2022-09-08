@@ -15,30 +15,31 @@ class TournamentController:
         self.display = TournamentDisplay
         self.serialized_tournaments = []
         self.player = PlayerModel
+        self.db = TinyDB('db.json')
+        self.tournaments_table = self.db.table('tournaments')
 
     def create_new_tournament(self, tournament_information):
-        self.model(tournament_information['name'],
-                   tournament_information['location'],
-                   tournament_information['start_date'],
-                   tournament_information['end_date'],
-                   tournament_information['time_control'],
-                   tournament_information['description'],
-                   tournament_information['number_of_rounds'],
-                   tournament_information['number_of_players'])
-        self.save_tournaments()
+        new_tournament = self.model(tournament_information['name'],
+                                    tournament_information['location'],
+                                    tournament_information['start_date'],
+                                    tournament_information['end_date'],
+                                    tournament_information['time_control'],
+                                    tournament_information['description'],
+                                    tournament_information['number_of_rounds'],
+                                    tournament_information['number_of_players'])
+        self.save(new_tournament)
 
     def modify_tournament(self, tournament):
         menu = self.menu(tournament)
-        self.display().display_tournament_list(self.model.all_tournaments)
+        self.display().display_tournaments_list(self.model.all_tournaments)
         tournament = menu.select_tournament(self.model.all_tournaments)
         field = menu.modification_display()
         setattr(tournament, field[0], field[1])
-        self.save_tournaments()
+        self.save_all_tournaments()
 
     def add_player(self, tournament, player):
         self.model.add_player(tournament, player)
-        self.save_tournaments()
-        # self.load_tournaments()
+        self.save_all_tournaments()
 
     def create_next_round(self, tournament):
         if len(tournament.tournament_players) == tournament.number_of_players:
@@ -58,36 +59,27 @@ class TournamentController:
                             return
                 next_round = RoundController.create_new_round(tournament)
                 tournament.tournament_rounds.append(next_round)
-            self.save_tournaments()
         else:
             Error('Il manque des participants. Vous ne pouvez pas lancer de rounds.')
             return
 
-    def save_tournaments(self):
-        serialized_tournaments = []
-        db = TinyDB('db.json')
-        tournaments_table = db.table('tournaments')
-        tournaments_table.truncate()
+    def save_all_tournaments(self):
+        self.tournaments_table.truncate()
         for tournament in self.model.all_tournaments:
-            serialized_players = [self.player.serialize(player)
-                                  for player in tournament.tournament_players]
-            tournament_information = vars(tournament)
-            print(tournament_information)
-            tournament_information['tournament_players'] = serialized_players
-            print(tournament_information)
-            tournaments_table.insert(tournament_information)
+            self.save(tournament)
 
-    # def load_tournaments(self):
-    #     db = TinyDB('db.json')
-    #     tournaments_table = db.table('players')
-    #     self.serialized_tournaments = tournaments_table.all()
-    #     self.deserialize_tournaments()
-    #
-    # def deserialize_tournaments(self):
-    #     self.model.all_tournaments = []
-    #     for serialized_tournament in self.serialized_tournaments:
-    #         self.deserialize_tournament(serialized_tournament)
-    #     return self.model.all_tournaments
+    def save(self, tournament):
+        serialized_tournament = self.model.serialize(tournament)
+        self.tournaments_table.insert(serialized_tournament)
 
-    # def deserialize_tournament(self, serialized_tournament):
-    #     self.model(**serialized_tournament)
+    def load_all_tournaments(self):
+        serialized_tournaments = self.tournaments_table.all()
+        self.model.all_tournaments = []
+        for tournament in serialized_tournaments:
+            players_id = tournament.get('tournament_players')
+            players = []
+            for player in players_id:
+                players.append(self.player.all_players[player-1])
+            tournament.update({'tournament_players': players})
+            self.model.deserialize(tournament)
+        print(self.model.all_tournaments)

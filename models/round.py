@@ -2,7 +2,7 @@ from models.match import MatchModel
 from views.messages import Error
 
 
-class Round:
+class RoundModel:
     """Round."""
 
     def __init__(self, name, round_number, players):
@@ -18,6 +18,9 @@ class Round:
             self.create_first_player_pairs()
         elif self.round_number > 1:
             self.create_player_pairs()
+
+    def __str__(self):
+        return f"{self.name}"
 
     def create_first_player_pairs(self):
         sorted_players = sorted(self.players, key=lambda players: players.rank, reverse=True)
