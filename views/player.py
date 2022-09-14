@@ -10,9 +10,9 @@ class PlayerView:
 
     def __init__(self):
         self.last_name = self.get_information('Quel est le nom de famille du joueur?',
-                                              'Champs obligatoire! Merci de le renseigner.')
+                                              'Champs obligatoire! Merci de le renseigner.').upper()
         self.first_name = self.get_information('Quel est le prénom du joueur?',
-                                               'Champs obligatoire! Merci de le renseigner.')
+                                               'Champs obligatoire! Merci de le renseigner.').capitalize()
         self.birth_date = self.get_player_birth_date("Quel est la date d'anniversaire du joueur?",
                                                      'Champs obligatoire! Merci de le renseigner.')
         self.sex = self.get_player_sex()

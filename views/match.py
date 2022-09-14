@@ -28,16 +28,33 @@ class MatchDisplay:
     def __init__(self):
         self.console = Console(width=200)
 
-    def display_matchs_list(self, list_origin, matchs_list):
-        if len(list_origin) >= 6 and list_origin.name[:6] == 'Round ':
-            match_table = Table(title='', title_style='bold blue')
-        else:
-            match_table = Table(title=f"Liste des matchs du {str(list_origin)}", title_style='bold blue')
-        match_table.add_column('N°', justify='center')
-        match_table.add_column('Matchs', justify='center')
-        match_table.add_column('Scores', justify='center')
+    def display_matchs_list_from_round(self, list_origin, matchs_list):
+        matchs_table = Table(title='', title_style='bold blue')
+        matchs_table.add_column('N°', justify='center')
+        matchs_table.add_column('Matchs', justify='center')
+        matchs_table.add_column('Scores', justify='center')
         for match in matchs_list:
-            match_table.add_row(f"{matchs_list.index(match)+1}",
-                                f"{match.player1} contre {match.player2}",
-                                f"{match.player1_score} - {match.player2_score}")
-        self.console.print(match_table)
+            matchs_table.add_row(f"{matchs_list.index(match)+1}",
+                                 f"{match.player1} contre {match.player2}",
+                                 f"{match.player1_score} - {match.player2_score}")
+        self.console.print(matchs_table)
+
+    def display_matchs_list_from_tournament(self, tournament):
+        Information(f"Liste des match du tournoi {str(tournament)}")
+        if len(tournament.tournament_rounds) > 0:
+            match_number = 1
+            matchs_table = Table()
+            matchs_table.add_column('N°', justify='center')
+            matchs_table.add_column('Rounds', justify='center')
+            matchs_table.add_column('Matchs', justify='center')
+            matchs_table.add_column('Scores', justify='center')
+            for round in tournament.tournament_rounds:
+                for match in round.matchs:
+                    matchs_table.add_row(f"{match_number}",
+                                         f"{round.name}",
+                                         f"{str(match)}",
+                                         f"{match.player1_score} - {match.player2_score}")
+                    match_number += 1
+            self.console.print(matchs_table)
+        else:
+            Error("Aucun match n'a été trouver pour ce tournoi")

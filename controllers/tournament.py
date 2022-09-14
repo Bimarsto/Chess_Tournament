@@ -4,7 +4,7 @@ from controllers.round import RoundController
 from controllers.player import PlayerController
 from models.tournament import TournamentModel
 from models.player import PlayerModel
-from tinydb import TinyDB
+from tinydb import TinyDB, Query
 
 
 class TournamentController:
@@ -27,7 +27,6 @@ class TournamentController:
                                     tournament_information['description'],
                                     tournament_information['number_of_rounds'],
                                     tournament_information['number_of_players'])
-        self.save(new_tournament)
 
     def modify_tournament(self, tournament):
         menu = self.menu(tournament)
@@ -35,11 +34,9 @@ class TournamentController:
         tournament = menu.select_tournament(self.model.all_tournaments)
         field = menu.modification_display()
         setattr(tournament, field[0], field[1])
-        self.save_all_tournaments()
 
     def add_player(self, tournament, player):
         self.model.add_player(tournament, player)
-        self.save_all_tournaments()
 
     def create_next_round(self, tournament):
         if len(tournament.tournament_players) == tournament.number_of_players:
@@ -76,10 +73,4 @@ class TournamentController:
         serialized_tournaments = self.tournaments_table.all()
         self.model.all_tournaments = []
         for tournament in serialized_tournaments:
-            players_id = tournament.get('tournament_players')
-            players = []
-            for player in players_id:
-                players.append(self.player.all_players[player-1])
-            tournament.update({'tournament_players': players})
             self.model.deserialize(tournament)
-        print(self.model.all_tournaments)

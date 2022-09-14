@@ -10,16 +10,16 @@ class TournamentView:
 
     def creation(self):
         return {'name': self.get_information('Quel est le nom du tournoi?',
-                                             'Champs obligatoire! Merci de le renseigner.'),
+                                             'Champs obligatoire! Merci de le renseigner.').lower(),
                 'location': self.get_information('Indiquez le lieu ou se déroule le tournoi?',
-                                                 'Champs obligatoire! Merci de le renseigner.'),
+                                                 'Champs obligatoire! Merci de le renseigner.').capitalize(),
                 'start_date': self.get_tournament_date('Quel est la date de début du tournoi?',
                                                        'Champs obligatoire! Merci de le renseigner.'),
                 'end_date': self.get_tournament_date('Quel est la date de fin du tournoi?',
                                                      'Champs obligatoire! Merci de le renseigner.'),
                 'time_control': self.get_tournament_time_control(),
                 'description': self.get_information('Ajoutez une decsription du tournoi',
-                                                    'Champs obligatoire! Merci de le renseigner.'),
+                                                    'Champs obligatoire! Merci de le renseigner.').lower(),
                 'number_of_rounds': self.get_value("Quel est le nombre de rounds pour ce tournoi? (4 par défaut)",
                                                    1, 4),
                 'number_of_players': self.get_value("Quel est le nombre de joueurs pour ce tournoi? (8 par défaut)",
@@ -91,8 +91,9 @@ class TournamentMenu:
 
     def tournament_creation_menu(self):
         choice = ''
-        Information(f"Menu du tournoi {self.tournament.name} - {len(self.tournament.tournament_players)}/"
-                    f"{self.tournament.number_of_players} joueur(s) inscrit(s)")
+        Information(f"Menu du tournoi {self.tournament.name} | {len(self.tournament.tournament_players)}/"
+                    f"{self.tournament.number_of_players} joueur(s) inscrit(s) | "
+                    f"{len(self.tournament.tournament_rounds)}/{self.tournament.number_of_rounds} rounds joués")
         while choice == '':
             choice = input('Entrez votre choix : \n'
                            '1 : Ajouter un joueur \n'

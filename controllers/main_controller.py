@@ -30,17 +30,20 @@ class MainController:
     def run(self):
         console = Console(width=200)
         console.rule("Gestionnaire de tournoi d'echec | Bienvenue")
-        while self.running:
-            self.main_menu_controller()
-        Information("A bientot !")
-
-    def main_menu_controller(self):
         self.player.load_all_players()
         self.tournament.load_all_tournaments()
+        while self.running:
+            self.main_menu_controller()
+
+    def main_menu_controller(self):
         # self.tournament.load_tournaments()
         match self.mainmenu.get_choice():
             case '9':  # Quitter
+                self.player.save_all_players()
+                self.tournament.save_all_tournaments()
                 self.running = False
+                Information("A bientot !")
+                exit()
             case '1':  # Créer un nouveau tournoi
                 Information("Création d'un nouveau tournoi")
                 self.tournament.create_new_tournament(self.tournament_information.creation())
@@ -56,7 +59,10 @@ class MainController:
             case '3':  # Ajouter un nouveau joueur
                 self.player.create_new_player()
             case '4':  # Modifier un joueur
-                self.player.modify_player()
+                if len(self.player.model.all_players) > 0:
+                    self.player.modify_player()
+                else:
+                    Error("Aucun joueur accessible.")
             case '5':  # Rapports
                 self.reports_controller(self.report.get_report_type())
 
@@ -71,7 +77,8 @@ class MainController:
                     Error('Le nombre de joueurs au tournoi est atteint. Vous ne pouvez plus ajouter de joueurs.')
                     self.tournament_controller(tournament)
             case '2':  # Démarreer le prochain round
-                active_round = self.tournament.create_next_round(tournament)
+                self.tournament.create_next_round(tournament)
+                active_round = tournament.tournament_rounds[-1]
                 if active_round is None:
                     self.tournament_controller(tournament)
                 else:
@@ -154,8 +161,10 @@ class MainController:
                     tournament = self.tournament.menu.select_tournament(self.tournament.model.all_tournaments)
                     if len(tournament.tournament_rounds) > 0:
                         self.round_display.display_rounds_list(tournament)
+                        input('Appuyer sur "Entrée" pour revenir au menu')
                     else:
                         Error("Aucun round n'est créé pour ce tournoi.")
+                    self.reports_controller(self.report.get_report_type())
                 else:
                     Error("Aucun tournoi accessible.")
             case '7':
@@ -163,16 +172,18 @@ class MainController:
                     self.tournament_display.display_tournaments_list(self.tournament.model.all_tournaments)
                     tournament = self.tournament.menu.select_tournament(self.tournament.model.all_tournaments)
                     if len(tournament.tournament_rounds) > 0:
-                        pass
+                        self.match_display.display_matchs_list_from_tournament(tournament)
+                        input('Appuyer sur "Entrée" pour revenir au menu')
                     else:
                         Error("Aucun round n'est créé pour ce tournoi.")
+                    self.reports_controller(self.report.get_report_type())
                 else:
                     Error("Aucun tournoi accessible.")
 
     def play_round(self, tournament, active_round):
         round_uncompleted = True
         while round_uncompleted:
-            self.match_display.display_matchs_list(active_round, active_round.matchs)
+            self.match_display.display_matchs_list_from_round(active_round, active_round.matchs)
             # RoundView(active_round).display_round_matchs()
             match_index = RoundView(active_round).round_menu()
             if int(match_index) == 0:

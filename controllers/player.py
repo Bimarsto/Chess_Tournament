@@ -1,7 +1,7 @@
 from views.player import PlayerView, PlayerMenu, PlayerDisplay
 from models.player import PlayerModel
 from tinydb import TinyDB
-
+from views.messages import Information
 
 class PlayerController:
 
@@ -20,7 +20,10 @@ class PlayerController:
                                 new_player_information.birth_date,
                                 new_player_information.sex,
                                 new_player_information.rank)
-        self.save(new_player)
+        if new_player.sex == 'Homme':
+            Information(f"Joueur {str(new_player)} créé.")
+        else:
+            Information(f"Joueuse {str(new_player)} créée.")
         return new_player
 
     def modify_player(self):
@@ -28,7 +31,6 @@ class PlayerController:
         player = self.menu.select_player(self.model.all_players)
         field = self.menu.modification_display()
         setattr(player, field[0], field[1])
-        self.save_all_players()
 
     def save_all_players(self):
         self.players_table.truncate()
@@ -43,6 +45,4 @@ class PlayerController:
         serialized_players = self.players_table.all()
         self.model.all_players = []
         for player in serialized_players:
-            id = player.pop('id')
             self.model.deserialize(player)
-            self.model.all_players[-1].id = id

@@ -10,7 +10,6 @@ class RoundView:
     def __init__(self, active_round):
         self.round = active_round
 
-
     def round_menu(self):
         match_index = ''
         match_list = []
@@ -35,11 +34,18 @@ class RoundDisplay:
         self.match_display = MatchDisplay()
 
     def display_rounds_list(self, tournament):
-        round_table = Table(title=f"Liste des rounds du {str(tournament)}", title_style='bold blue')
+        round_table = Table(title=f"Liste des rounds du {tournament.name}", title_style='bold blue')
         round_table.add_column('Nom', justify='center')
+        round_table.add_column('Début', justify='center')
+        round_table.add_column('Fin', justify='center')
         round_table.add_column('Matchs', justify='center')
         for round in tournament.tournament_rounds:
+            matchs = ""
+            for match in round.matchs:
+                matchs += f"{str(match)}\n"
             round_table.add_row(f"{round.name}",
-                                f"{self.match_display.display_matchs_list(round, round.match)}"
+                                f"{round.start}",
+                                f"{round.finish}",
+                                f"{matchs}"
                                 )
         self.console.print(round_table)
