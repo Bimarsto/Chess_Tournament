@@ -1,10 +1,9 @@
 from views.tournament import TournamentDisplay, TournamentMenu
 from views.messages import Error
 from controllers.round import RoundController
-from controllers.player import PlayerController
 from models.tournament import TournamentModel
 from models.player import PlayerModel
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 
 
 class TournamentController:
@@ -19,14 +18,14 @@ class TournamentController:
         self.tournaments_table = self.db.table('tournaments')
 
     def create_new_tournament(self, tournament_information):
-        new_tournament = self.model(tournament_information['name'],
-                                    tournament_information['location'],
-                                    tournament_information['start_date'],
-                                    tournament_information['end_date'],
-                                    tournament_information['time_control'],
-                                    tournament_information['description'],
-                                    tournament_information['number_of_rounds'],
-                                    tournament_information['number_of_players'])
+        self.model(tournament_information['name'],
+                   tournament_information['location'],
+                   tournament_information['start_date'],
+                   tournament_information['end_date'],
+                   tournament_information['time_control'],
+                   tournament_information['description'],
+                   tournament_information['number_of_rounds'],
+                   tournament_information['number_of_players'])
 
     def modify_tournament(self, tournament):
         menu = self.menu(tournament)

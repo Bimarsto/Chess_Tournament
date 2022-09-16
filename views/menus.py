@@ -1,5 +1,4 @@
 """Base view."""
-from rich.console import Console
 from views.messages import Error, Information
 
 
@@ -37,7 +36,7 @@ class RoundMenu:
             if count >= 1:
                 Error("Veuillez entrer le n° de votre choix dans le menu.")
             Information(f"Menu du {self.round.name}")
-            choice = input(f"Mettre à jour le match n° : \n")
+            choice = input("Mettre à jour le match n° : \n")
             count += 1
             if int(choice)-1 in range(0, len(self.round.matchs)):
                 return int(choice)-1

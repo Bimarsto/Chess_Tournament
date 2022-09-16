@@ -170,5 +170,3 @@ class PlayerDisplay:
                                  f"{player.rank}"
                                  )
         console.print(player_table)
-
-

@@ -50,11 +50,11 @@ class RoundModel:
             deserialized_round.matchs.append(MatchModel.deserialize(match))
         return deserialized_round
 
-    def create_players_pairs(self, tournament):
+    def create_players_pairs(self):
         if self.round_number == 1:
             self.create_first_player_pairs()
         elif self.round_number > 1:
-            self.create_player_pairs(tournament)
+            self.create_player_pairs()
 
     def create_first_player_pairs(self):
         sorted_players = sorted(self.players, key=lambda players: players.rank, reverse=True)
@@ -63,7 +63,7 @@ class RoundModel:
         for i in range(0, len(upper_half_group)):
             self.matchs.append(MatchModel(upper_half_group[i], lower_half_group[i]))
 
-    def create_player_pairs(self, tournament):
+    def create_player_pairs(self):
         sorted_players = sorted(self.players,
                                 key=lambda players: (players.tournament_score, players.rank),
                                 reverse=True

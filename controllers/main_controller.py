@@ -76,13 +76,16 @@ class MainController:
                 else:
                     Error('Le nombre de joueurs au tournoi est atteint. Vous ne pouvez plus ajouter de joueurs.')
                     self.tournament_controller(tournament)
-            case '2':  # Démarreer le prochain round
+            case '2':  # Démarrer le prochain round
                 self.tournament.create_next_round(tournament)
                 active_round = tournament.tournament_rounds[-1]
                 if active_round is None:
                     self.tournament_controller(tournament)
                 else:
                     self.play_round(tournament, active_round)
+            case '3':  # Afficher le classement
+                self.tournament_display.tournament_classification(tournament)
+                input('Appuyer sur "Entrée" pour revenir au menu')
 
     def add_tournament_player(self, tournament):
         match TournamentMenu(tournament).add_player():
@@ -99,7 +102,7 @@ class MainController:
                     self.tournament.add_player(tournament, player)
                     self.tournament_controller(tournament)
                 else:
-                    Error("Aucun joueur existant disponnible.")
+                    Error("Aucun joueur existant disponible.")
                     self.add_tournament_player(tournament)
             case '2':  # Nouveau joueur
                 player = self.player.create_new_player()
@@ -201,4 +204,5 @@ class MainController:
             match.player1.tournament_score += match.player1_score
             match.player2.tournament_score += match.player2_score
         Information('Round terminé!')
+        self.tournament_display.tournament_classification(tournament)
         self.tournament_controller(tournament)

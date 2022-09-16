@@ -1,7 +1,4 @@
 from models.round import RoundModel
-from views.round import RoundView
-from views.messages import Information
-from controllers.match import MatchController
 from controllers.utils import Utils
 
 
@@ -13,6 +10,5 @@ class RoundController:
                                len(tournament.tournament_rounds) + 1,
                                tournament.tournament_players)
         new_round.start = Utils.parse_date('maintenant')
-        new_round.create_players_pairs(tournament)
+        new_round.create_players_pairs()
         return new_round
-

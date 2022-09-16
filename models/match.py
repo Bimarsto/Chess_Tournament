@@ -19,7 +19,7 @@ class MatchModel:
                f'{self.player2.first_name} {self.player2.last_name}'
 
     def serialize(self):
-        match = ([self.player1.id, self.player1_score], [self.player2.id,self.player2_score])
+        match = ([self.player1.id, self.player1_score], [self.player2.id, self.player2_score])
         return {'player1': self.player1.id,
                 'player2': self.player2.id,
                 'player1_score': self.player1_score,

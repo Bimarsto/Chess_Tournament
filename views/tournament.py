@@ -1,6 +1,6 @@
 """View for tournament"""
 from rich.console import Console
-from rich.table import Table
+from rich.table import Table, box
 from views.messages import Error, Information
 from controllers.utils import Utils
 
@@ -18,7 +18,7 @@ class TournamentView:
                 'end_date': self.get_tournament_date('Quel est la date de fin du tournoi?',
                                                      'Champs obligatoire! Merci de le renseigner.'),
                 'time_control': self.get_tournament_time_control(),
-                'description': self.get_information('Ajoutez une decsription du tournoi',
+                'description': self.get_information('Ajoutez une description du tournoi',
                                                     'Champs obligatoire! Merci de le renseigner.').lower(),
                 'number_of_rounds': self.get_value("Quel est le nombre de rounds pour ce tournoi? (4 par défaut)",
                                                    1, 4),
@@ -78,7 +78,7 @@ class TournamentView:
             if not str(value).isdigit():
                 Error("La valeur saisie doit être un nombre entier positif.")
             elif int(value) < min_value:
-                Error(f"La valeur saisie doit être suppérieure ou égale à {min_value}.")
+                Error(f"La valeur saisie doit être supérieure ou égale à {min_value}.")
             else:
                 valid_value = True
         return int(value)
@@ -98,8 +98,9 @@ class TournamentMenu:
             choice = input('Entrez votre choix : \n'
                            '1 : Ajouter un joueur \n'
                            '2 : Démarrer le prochain round \n'
+                           '3 : Afficher le classement \n'
                            '9 : Retour au menu principal \n')
-            if choice not in ['9', '1', '2']:
+            if choice not in ['9', '1', '2', '3']:
                 Error('Veuillez entrer le n° de votre choix dans le menu.')
                 choice = ''
         return choice
@@ -160,7 +161,7 @@ class TournamentMenu:
                                                           "(8 par défaut)", 2, 8)
                 case '8':
                     field[0] = 'description'
-                    field[1] = TournamentView().get_information('Ajoutez une decsription du tournoi',
+                    field[1] = TournamentView().get_information('Ajoutez une description du tournoi',
                                                                 'Champs obligatoire! Merci de le renseigner.')
 
     @staticmethod
@@ -168,7 +169,7 @@ class TournamentMenu:
         selection = ''
         valid_value = False
         while not valid_value:
-            selection = input("Entrez l'id du tournoi désiré: (liste des tournois ci-dessus)")
+            selection = input("Entrez l'id du tournoi désiré: (liste des tournois ci-dessus)\n")
             if selection == '':
                 Error('Champs obligatoire! Merci de le renseigner.')
             if not str(selection).isdigit():
@@ -192,7 +193,7 @@ class TournamentDisplay:
         tournament_table.add_column('Lieu', justify='center')
         tournament_table.add_column('Date de début', justify='center')
         tournament_table.add_column('Date de fin', justify='center')
-        tournament_table.add_column('Contrôl de temps', justify='center')
+        tournament_table.add_column('Contrôle de temps', justify='center')
         tournament_table.add_column('Nombre de rounds', justify='center')
         tournament_table.add_column('Nombre de joueurs', justify='center')
         tournament_table.add_column('Description', justify='center')
@@ -208,3 +209,26 @@ class TournamentDisplay:
                                      f"{tournament.description}"
                                      )
         self.console.print(tournament_table)
+
+    def tournament_classification(self, tournament):
+        classification = Table(title='Classement du tournoi',
+                               title_style='bold yellow',
+                               box=box.DOUBLE_EDGE,
+                               border_style="blue"
+                               )
+        classification.add_column('Class.', justify='center')
+        classification.add_column('Nom', justify='center', min_width=50)
+        classification.add_column('Points', justify='center')
+        classification.add_column('Ranking', justify='center')
+        players_list = tournament.tournament_players
+        sorted_players = sorted(players_list,
+                                key=lambda players: (players.tournament_score, players.rank),
+                                reverse=True
+                                )
+        for player in sorted_players:
+            classification.add_row(f"{sorted_players.index(player)+1}",
+                                   f"{player.first_name} {player.last_name}",
+                                   f"{player.tournament_score}",
+                                   f"{player.rank}"
+                                   )
+        self.console.print(classification)

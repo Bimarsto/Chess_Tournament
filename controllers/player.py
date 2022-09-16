@@ -3,6 +3,7 @@ from models.player import PlayerModel
 from tinydb import TinyDB
 from views.messages import Information
 
+
 class PlayerController:
 
     def __init__(self):

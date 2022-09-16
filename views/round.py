@@ -1,7 +1,7 @@
 """View for round"""
 from rich.console import Console
 from rich.table import Table
-from views.messages import Error, Information
+from views.messages import Error
 from views.match import MatchDisplay
 
 
