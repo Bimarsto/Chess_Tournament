@@ -28,10 +28,7 @@ class TournamentController:
                    tournament_information['number_of_players'])
 
     def modify_tournament(self, tournament):
-        menu = self.menu(tournament)
-        self.display().display_tournaments_list(self.model.all_tournaments)
-        tournament = menu.select_tournament(self.model.all_tournaments)
-        field = menu.modification_display()
+        field = self.menu.modification_display()
         setattr(tournament, field[0], field[1])
 
     def add_player(self, tournament, player):

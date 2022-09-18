@@ -96,11 +96,12 @@ class TournamentMenu:
                     f"{len(self.tournament.tournament_rounds)}/{self.tournament.number_of_rounds} rounds joués")
         while choice == '':
             choice = input('Entrez votre choix : \n'
-                           '1 : Ajouter un joueur \n'
-                           '2 : Démarrer le prochain round \n'
-                           '3 : Afficher le classement \n'
+                           '1 : Modifier le tournoi \n'
+                           '2 : Ajouter un joueur \n'
+                           '3 : Démarrer le prochain round \n'
+                           '4 : Afficher le classement \n'
                            '9 : Retour au menu principal \n')
-            if choice not in ['9', '1', '2', '3']:
+            if choice not in ['9', '1', '2', '3', '4']:
                 Error('Veuillez entrer le n° de votre choix dans le menu.')
                 choice = ''
         return choice
@@ -127,10 +128,10 @@ class TournamentMenu:
                              '2 : Lieu \n'
                              '3 : Date de début \n'
                              '4 : Date de fin \n'
-                             '5 : Contrôl de temps \n'
+                             '5 : Contrôle de temps \n'
                              '6 : Nombre de rounds \n'
                              '7 : Nombre de joueurs \n'
-                             '8 : Description')
+                             '8 : Description\n')
             match field[0]:
                 case '1':
                     field[0] = 'name'
@@ -163,6 +164,9 @@ class TournamentMenu:
                     field[0] = 'description'
                     field[1] = TournamentView().get_information('Ajoutez une description du tournoi',
                                                                 'Champs obligatoire! Merci de le renseigner.')
+                case _:
+                    Error('Merci de sélectionner une information à modifier dans la liste.')
+            return field
 
     @staticmethod
     def select_tournament(all_tournaments):

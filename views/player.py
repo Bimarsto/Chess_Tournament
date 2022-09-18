@@ -104,7 +104,7 @@ class PlayerMenu:
                     field[0] = 'rank'
                     field[1] = PlayerView.get_rank('Quel est le classement du joueur? (0 par défaut)')
                 case _:
-                    Error('Merci de sélectioner une information à modifier dans la liste.')
+                    Error('Merci de sélectionner une information à modifier dans la liste.')
             return field
 
     @staticmethod

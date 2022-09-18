@@ -11,9 +11,6 @@ class MatchModel:
         self.player2_score = player2_score
         self.match = ([self.player1, self.player1_score], [self.player2, self.player2_score])
 
-        # self.player1.played_against.append(self.player2.id)
-        # self.player2.played_against.append(self.player1.id)
-
     def __str__(self):
         return f'{self.player1.first_name} {self.player1.last_name} - ' \
                f'{self.player2.first_name} {self.player2.last_name}'
