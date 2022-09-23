@@ -126,11 +126,10 @@ class PlayerMenu:
 
 class PlayerDisplay:
 
-    def __init__(self):
-        self.console = Console(width=200)
-
-    def display_players_list(self, player_list):
-        console = self.console
+    @staticmethod
+    def display_players_list(player_list):
+        console = Console(width=200)
+        console = console
         player_table = Table(title="Liste de l'ensemble des joueurs", title_style='bold blue')
         player_table.add_column('ID')
         player_table.add_column('Nom')
@@ -148,8 +147,10 @@ class PlayerDisplay:
                                  )
         console.print(player_table)
 
-    def report(self, player_list, sort_type):
-        console = self.console
+    @staticmethod
+    def report(player_list, sort_type):
+        console = Console(width=200)
+        console = console
         if sort_type == 'classement':
             sorted_player_list = sorted(player_list, key=lambda players: players.rank, reverse=True)
         else:

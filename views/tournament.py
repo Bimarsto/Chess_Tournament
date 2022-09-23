@@ -187,10 +187,9 @@ class TournamentMenu:
 
 class TournamentDisplay:
 
-    def __init__(self):
-        self.console = Console(width=200)
-
-    def display_tournaments_list(self, tournaments_list):
+    @staticmethod
+    def display_tournaments_list(tournaments_list):
+        console = Console(width=200)
         tournament_table = Table(title="Liste des tournois", title_style='bold blue')
         tournament_table.add_column('ID', justify='center')
         tournament_table.add_column('Nom', justify='center')
@@ -212,9 +211,11 @@ class TournamentDisplay:
                                      f"{tournament.number_of_players}",
                                      f"{tournament.description}"
                                      )
-        self.console.print(tournament_table)
+        console.print(tournament_table)
 
-    def tournament_classification(self, tournament):
+    @staticmethod
+    def tournament_classification(tournament):
+        console = Console(width=200)
         classification = Table(title='Classement du tournoi',
                                title_style='bold yellow',
                                box=box.DOUBLE_EDGE,
@@ -235,4 +236,4 @@ class TournamentDisplay:
                                    f"{player.tournament_score}",
                                    f"{player.rank}"
                                    )
-        self.console.print(classification)
+        console.print(classification)

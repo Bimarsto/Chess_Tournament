@@ -25,10 +25,9 @@ class MatchView:
 
 class MatchDisplay:
 
-    def __init__(self):
-        self.console = Console(width=200)
-
-    def display_matchs_list_from_round(self, list_origin, matchs_list):
+    @staticmethod
+    def display_matchs_list_from_round(list_origin, matchs_list):
+        console = Console(width=200)
         matchs_table = Table(title='', title_style='bold blue')
         matchs_table.add_column('N°', justify='center')
         matchs_table.add_column('Matchs', justify='center')
@@ -37,9 +36,11 @@ class MatchDisplay:
             matchs_table.add_row(f"{matchs_list.index(match)+1}",
                                  f"{match.player1} contre {match.player2}",
                                  f"{match.player1_score} - {match.player2_score}")
-        self.console.print(matchs_table)
+        console.print(matchs_table)
 
-    def display_matchs_list_from_tournament(self, tournament):
+    @staticmethod
+    def display_matchs_list_from_tournament(tournament):
+        console = Console(width=200)
         Information(f"Liste des match du tournoi {str(tournament)}")
         if len(tournament.tournament_rounds) > 0:
             match_number = 1
@@ -55,6 +56,6 @@ class MatchDisplay:
                                          f"{str(match)}",
                                          f"{match.player1_score} - {match.player2_score}")
                     match_number += 1
-            self.console.print(matchs_table)
+            console.print(matchs_table)
         else:
             Error("Aucun match n'a été trouver pour ce tournoi")

@@ -30,10 +30,10 @@ class RoundView:
 class RoundDisplay:
 
     def __init__(self):
-        self.console = Console(width=200)
         self.match_display = MatchDisplay()
 
     def display_rounds_list(self, tournament):
+        console = Console(width=200)
         round_table = Table(title=f"Liste des rounds du {tournament.name}", title_style='bold blue')
         round_table.add_column('Nom', justify='center')
         round_table.add_column('Début', justify='center')
@@ -48,4 +48,4 @@ class RoundDisplay:
                                 f"{round.finish}",
                                 f"{matchs}"
                                 )
-        self.console.print(round_table)
+        console.print(round_table)
