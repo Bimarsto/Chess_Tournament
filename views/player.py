@@ -88,11 +88,11 @@ class PlayerMenu:
                 case '1':
                     field[0] = 'last_name'
                     field[1] = PlayerView.get_information('Quel est le nom de famille du joueur?',
-                                                          'Champs obligatoire! Merci de le renseigner.')
+                                                          'Champs obligatoire! Merci de le renseigner.').upper()
                 case '2':
                     field[0] = 'first_name'
                     field[1] = PlayerView.get_information('Quel est le prénom du joueur?',
-                                                          'Champs obligatoire! Merci de le renseigner.')
+                                                          'Champs obligatoire! Merci de le renseigner.').capitalize()
                 case '3':
                     field[0] = 'birth_date'
                     field[1] = PlayerView.get_player_birth_date("Quel est la date d'anniversaire du joueur?",

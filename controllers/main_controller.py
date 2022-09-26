@@ -44,7 +44,7 @@ class MainController:
                 self.tournament().create_new_tournament(self.tournament_information.creation())
                 self.main_menu_controller()
             case '2':  # Accéder à un tournoi
-                self.tournament().access_tournament()
+                self.tournament_controller(self.tournament().access_tournament())
                 self.main_menu_controller()
             case '3':  # Ajouter un nouveau joueur
                 self.player().create_new_player()
@@ -72,6 +72,7 @@ class MainController:
             case '4':  # Afficher le classement
                 self.tournament_display.tournament_classification(tournament)
                 input('Appuyer sur "Entrée" pour revenir au menu')
+                self.tournament_controller(tournament)
 
     def add_tournament_player(self, tournament):
         if self.tournament().is_full(tournament):

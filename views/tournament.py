@@ -213,8 +213,8 @@ class TournamentDisplay:
                                      )
         console.print(tournament_table)
 
-    @staticmethod
-    def tournament_classification(tournament):
+    def tournament_classification(self, tournament):
+        sorted_players = self.generate_classification(tournament)
         console = Console(width=200)
         classification = Table(title='Classement du tournoi',
                                title_style='bold yellow',
@@ -225,15 +225,32 @@ class TournamentDisplay:
         classification.add_column('Nom', justify='center', min_width=50)
         classification.add_column('Points', justify='center')
         classification.add_column('Ranking', justify='center')
-        players_list = tournament.tournament_players
-        sorted_players = sorted(players_list,
-                                key=lambda players: (players.tournament_score, players.rank),
-                                reverse=True
-                                )
         for player in sorted_players:
+            if isinstance(player[1], float) and player[1].is_integer():
+                score = int(player[1])
+            else:
+                score = player[1]
             classification.add_row(f"{sorted_players.index(player)+1}",
-                                   f"{player.first_name} {player.last_name}",
-                                   f"{player.tournament_score}",
-                                   f"{player.rank}"
+                                   f"{player[0].first_name} {player[0].last_name}",
+                                   f"{score}",
+                                   f"{player[0].rank}"
                                    )
         console.print(classification)
+
+    @staticmethod
+    def generate_classification(tournament):
+        players_list = []
+        for player in tournament.tournament_players:
+            players_list.append([player, 0])
+        for round in tournament.tournament_rounds:
+            for match in round.matchs:
+                for player in players_list:
+                    if match.player1 == player[0]:
+                        player[1] += match.player1_score
+                    if match.player2 == player[0]:
+                        player[1] += match.player2_score
+        sorted_players = sorted(players_list,
+                                key=lambda players: (players[1], players[0].rank),
+                                reverse=True
+                                )
+        return sorted_players

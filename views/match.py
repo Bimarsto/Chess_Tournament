@@ -33,9 +33,14 @@ class MatchDisplay:
         matchs_table.add_column('Matchs', justify='center')
         matchs_table.add_column('Scores', justify='center')
         for match in matchs_list:
-            matchs_table.add_row(f"{matchs_list.index(match)+1}",
-                                 f"{match.player1} contre {match.player2}",
-                                 f"{match.player1_score} - {match.player2_score}")
+            if match.player1_score is not None or match.player2_score is not None:
+                matchs_table.add_row(f"{matchs_list.index(match)+1}",
+                                     f"{match.player1} contre {match.player2}",
+                                     f"{match.player1_score} - {match.player2_score}")
+            else:
+                matchs_table.add_row(f"{matchs_list.index(match) + 1}",
+                                     f"{match.player1} contre {match.player2}",
+                                     "Score à venir")
         console.print(matchs_table)
 
     @staticmethod
@@ -51,10 +56,16 @@ class MatchDisplay:
             matchs_table.add_column('Scores', justify='center')
             for round in tournament.tournament_rounds:
                 for match in round.matchs:
-                    matchs_table.add_row(f"{match_number}",
-                                         f"{round.name}",
-                                         f"{str(match)}",
-                                         f"{match.player1_score} - {match.player2_score}")
+                    if match.player1_score is not None or match.player2_score is not None:
+                        matchs_table.add_row(f"{match_number}",
+                                             f"{round.name}",
+                                             f"{str(match)}",
+                                             f"{match.player1_score} - {match.player2_score}")
+                    else:
+                        matchs_table.add_row(f"{match_number}",
+                                             f"{round.name}",
+                                             f"{str(match)}",
+                                             "Score à venir")
                     match_number += 1
             console.print(matchs_table)
         else:

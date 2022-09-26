@@ -31,12 +31,10 @@ class TournamentController:
         main.tournament_controller(self.model.all_tournaments[-1])
 
     def access_tournament(self):
-        from controllers.main_controller import MainController
-        main = MainController()
         if len(self.model.all_tournaments) > 0:
             TournamentDisplay().display_tournaments_list(self.model.all_tournaments)
             selected_tournament = TournamentMenu.select_tournament(self.model.all_tournaments)
-            main.tournament_controller(selected_tournament)
+            return selected_tournament
         else:
             Error("Aucun tournoi accessible.")
 
